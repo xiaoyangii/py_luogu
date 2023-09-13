@@ -36,6 +36,7 @@ root.configure(bg="white")  # 设置背景颜色为白色
 # 设置字体样式
 font_style = tkfont.Font(family="微软雅黑", size=18)
 font_style_warning = tkfont.Font(family="微软雅黑", size=18, weight="bold")
+font_style_output = tkfont.Font(family="微软雅黑", size=14)
 
 # 设置行列空白间隔
 root.rowconfigure(0, pad=20)
@@ -73,19 +74,22 @@ keyword_label = tk.Label(keyword_frame, text="关键字:", font=font_style, bg="
 keyword_label.pack(side="left", padx=(0, 10), pady=10)
 
 # 创建关键词输入框，并增加宽度、边框
-keyword_entry = tk.Entry(keyword_frame, font=font_style, width=25, borderwidth=2, relief="solid")  # 增大宽度并添加边框
+keyword_entry = tk.Entry(keyword_frame, font=font_style, width=21, borderwidth=2, relief="solid")  # 增大宽度并添加边框
 keyword_entry.pack(side="left", padx=20, pady=10)
 
 # 创建关键词提示信息 Label，设置宽度以对齐其他标签
 keyword_label = tk.Label(keyword_frame, text="多个关键词以顿号(、)分开！！！", font=font_style_warning, bg="white", width=30, fg="red")
 keyword_label.pack(side="left", padx=(0, 10), pady=10)
 
+# 创建一个 Frame 用于包含关键词 难度值和选择框
+difficulty_frame = tk.Frame(root, bg="white")
+difficulty_frame.grid(row=2, column=0, columnspan=24, padx=10, pady=10, sticky="ew")
 # 创建难度值输入框，并增加宽度和高度以及font_style样式，设置宽度以对齐其他标签
-difficulty_label = tk.Label(root, text="难度:", font=font_style, bg="white", width=6)
+difficulty_label = tk.Label(difficulty_frame, text="难度:", font=font_style, bg="white", width=6)
 difficulty_label.grid(row=2, column=0, sticky="w", padx=10, pady=10)
 selected_difficulty = tk.StringVar()
-difficulty_menu = tk.OptionMenu(root, selected_difficulty, *difficulty_options.keys())
-difficulty_menu.config(width=7, height=1, font=font_style)  # 设置宽度、高度和样式
+difficulty_menu = tk.OptionMenu(difficulty_frame, selected_difficulty, *difficulty_options.keys())
+difficulty_menu.config(width=18, height=1, font=font_style)  # 设置宽度、高度和样式
 difficulty_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
 # 创建一个 Frame 用于包含文本区域
@@ -97,13 +101,20 @@ text_frame = tk.Frame(root, bg="white")
 text_frame.grid(row=5, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
 
 # 创建一个Text组件用于显示控制台输出
-output_text = scrolledtext.ScrolledText(text_frame, font=font_style, width=30, height=10, bg="#E0F7FF", relief="solid", bd=2)
+output_text = scrolledtext.ScrolledText(text_frame, font=font_style_output, width=45, height=15, bg="#E0F7FF", relief="solid", bd=2)
 output_text.pack()
 
-# 创建一个函数来将标准输出重定向到文本区域
+# 创建一个函数以将控制台输出重定向到Text小部件
 def redirect_output():
-    sys.stdout.write = output_text.insert("end", str)  # 重定向标准输出
-    sys.stderr.write = output_text.insert("end", str)  # 重定向标准错误
+    # 定义一个自定义写函数，用于将消息写入Text小部件
+    def custom_write(msg):
+        output_text.insert("end", msg)  # 在Text小部件的末尾插入消息
+        output_text.see("end")  # 滚动到Text小部件的末尾，以显示最新的输出
+        output_text.update()  # 更新Text小部件以显示最新的输出
+    
+    # 将stdout和stderr重定向到自定义写函数
+    sys.stdout.write = custom_write
+    sys.stderr.write = custom_write
 
 
 # 创建一个函数来获取用户输入并构建URL
@@ -129,6 +140,7 @@ def get_url():
 
 def main():
     url, params, doc_name = get_url()
+    redirect_output()
     print(doc_name)
     total, arr_pro = get_pid(url, params)
     get_problem(doc_name, total, arr_pro)

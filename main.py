@@ -10,6 +10,7 @@ savePath = "E:\\桌面\\py_luogu\\problem\\"
 proName = ""
 proSoluName = ""
 arr_problems = []
+hasSave = 0
 
 def get_problem(doc_name, total, arr_pro):
     if total == 0:
@@ -45,7 +46,7 @@ def get_problem(doc_name, total, arr_pro):
         break
       time.sleep(random.randint(1,3))
     print("爬取完毕")
-    print("共爬取{format(hasSave)}个题目!!!")
+    print(f"共爬取{format(hasSave)}个题目!!!")
 
 
 # 将html转换为markdown
