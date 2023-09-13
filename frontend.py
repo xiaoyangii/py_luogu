@@ -30,13 +30,19 @@ type_options = {
 # 创建主窗口
 root = tk.Tk()
 root.title("洛谷题库爬取")
-root.geometry("1000x800")  # 设置窗口大小为1000x800
+screenWidth = root.winfo_screenwidth()  # 获取显示区域的宽度
+screenHeight = root.winfo_screenheight()  # 获取显示区域的高度
+width = 1100  # 设定窗口宽度
+height = 900  # 设定窗口高度
+left = (screenWidth - width) / 2
+top = (screenHeight - height) / 2
+root.geometry("%dx%d+%d+%d" % (width, height, left, top))  # 设置窗口大小为1000x800
 root.configure(bg="white")  # 设置背景颜色为白色
 
 # 设置字体样式
 font_style = tkfont.Font(family="微软雅黑", size=18)
 font_style_warning = tkfont.Font(family="微软雅黑", size=18, weight="bold")
-font_style_output = tkfont.Font(family="微软雅黑", size=14)
+font_style_output = tkfont.Font(family="微软雅黑", size=13)
 
 # 设置行列空白间隔
 root.rowconfigure(0, pad=20)
@@ -47,7 +53,7 @@ root.columnconfigure(0, pad=10)
 root.columnconfigure(1, pad=10)
 
 # 创建类型值Label，设置宽度以对齐其他标签
-type_label = tk.Label(root, text="类型:", font=font_style, bg="white", width=6)
+type_label = tk.Label(root, text="题库:", font=font_style, bg="white", width=6)
 type_label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
 
 # 创建单选按钮
@@ -94,14 +100,11 @@ difficulty_menu.grid(row=2, column=1, padx=10, pady=10, sticky="w")
 
 # 创建一个 Frame 用于包含文本区域
 text_frame = tk.Frame(root, bg="white")
-text_frame.grid(row=5, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
+text_frame.grid(row=5, column=1, columnspan=26, padx=10, pady=10, sticky="ew")
 
-# 创建一个 Frame 用于包含文本区域
-text_frame = tk.Frame(root, bg="white")
-text_frame.grid(row=5, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
 
 # 创建一个Text组件用于显示控制台输出
-output_text = scrolledtext.ScrolledText(text_frame, font=font_style_output, width=45, height=15, bg="#E0F7FF", relief="solid", bd=2)
+output_text = scrolledtext.ScrolledText(text_frame, font=font_style_output, width=80, height=20, bg="#E0F7FF", relief="solid", bd=2)
 output_text.pack()
 
 # 创建一个函数以将控制台输出重定向到Text小部件
