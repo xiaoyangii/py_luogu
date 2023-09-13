@@ -22,7 +22,7 @@ def get_problem(doc_name, total, arr_pro):
       os.makedirs("problem" + "\\" + doc_name)
     
     for i in range(total):
-      print("正在爬取{}...",format(arr_pro[i]["pid"]), end="")
+      print(f"正在爬取{format(arr_pro[i]['pid'])}...", end="")
 
       core, html = getPro(arr_pro[i]["pid"])
       core1 = getProSlu(arr_pro[i]["pid"])
@@ -40,8 +40,12 @@ def get_problem(doc_name, total, arr_pro):
         print("保存成功!")
       else:
         print("该题目不存在或无权查看")
-      # time.sleep(random.randint(2,5))
+      hasSave = i
+      if i == 49:
+        break
+      time.sleep(random.randint(1,3))
     print("爬取完毕")
+    print("共爬取{format(hasSave)}个题目!!!")
 
 
 # 将html转换为markdown

@@ -7,24 +7,24 @@ from main import *
 
 # 难度选项和对应的difficulty值
 difficulty_options = {
-    "暂无评定": 0,
-    "入门": 1,
-    "普及-": 2,
-    "普及/提高-": 3,
-    "普及+/提高": 4,
-    "提高+/省选-": 5,
-    "省选/NOI-": 6,
-    "NOI/NOI+/CTSC": 7
+  "暂无评定": 0,
+  "入门": 1,
+  "普及-": 2,
+  "普及、提高-": 3,
+  "普及+、提高": 4,
+  "提高+、省选-": 5,
+  "省选、NOI-": 6,
+  "NOI、NOI+、CTSC": 7
 }
 
 type_options = {
-    "洛谷": "B%7CP",
-    "主题库": "P",
-    "入门与面试": "B",
-    "CodeForces": "CF",
-    "SPOJ": "SP",
-    "AtCoder": "AT",
-    "UVA": "UVA",
+  "洛谷": "B%7CP",
+  "主题库": "P",
+  "入门与面试": "B",
+  "CodeForces": "CF",
+  "SPOJ": "SP",
+  "AtCoder": "AT",
+  "UVA": "UVA",
 }
 
 # 创建主窗口
@@ -129,6 +129,7 @@ def get_url():
 
 def main():
     url, params, doc_name = get_url()
+    print(doc_name)
     total, arr_pro = get_pid(url, params)
     get_problem(doc_name, total, arr_pro)
     
