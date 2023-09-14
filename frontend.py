@@ -123,16 +123,16 @@ def redirect_output():
 # 创建一个函数来获取用户输入并构建URL
 def get_url():
     keyword = keyword_entry.get() # 获得用户输入的关键词
+    difficulty = difficulty_options[selected_difficulty.get()] if selected_difficulty.get() else ""  # 如果没有选择难度，就默认为""
+    type_value = type_options[selected_type.get()]  # 获得用户选择的类型，用于构建URL
     if keyword:
         keywords = keyword.replace("、", "-")  # 如果有关键词，就分割
     else:
         keywords = "无关键词"  # 如果没有关键词，就默认无关键词，用于生成文件夹名称
-    difficulty = difficulty_options[selected_difficulty.get()] if selected_difficulty.get() else ""  # 如果没有选择难度，就默认为""
     if difficulty == "":
         difficult = "全部"  # 如果没有选择难度，就默认为返回全部，用于生成文件夹名称
     else:
         difficult = selected_difficulty.get()  # 如果有选择难度，就用选择的难度，用于生成文件夹名称
-    type_value = type_options[selected_type.get()]  # 获得用户选择的类型，用于构建URL
     # 构建文件名
     doc_parts = [difficult, keywords]
     doc_name = '-'.join(doc_parts)
@@ -141,16 +141,41 @@ def get_url():
     url = f"https://www.luogu.com.cn/problem/list?type={type_value}&difficulty={difficulty}&keyword={keyword}&page=1"
     return url, params, doc_name
 
+# test 写法
+# def get_url(kw="", dif="", typ=""):
+#     if kw=="" and dif=="" and typ=="":
+#         keyword = keyword_entry.get() # 获得用户输入的关键词
+#         difficulty = difficulty_options[selected_difficulty.get()] if selected_difficulty.get() else ""  # 如果没有选择难度，就默认为""
+#         type_value = type_options[selected_type.get()]  # 获得用户选择的类型，用于构建URL
+#     else:  
+#         keyword = kw
+#         difficulty = dif
+#         type_value = typ
+#     if keyword:
+#         keywords = keyword.replace("、", "-")  # 如果有关键词，就分割
+#     else:
+#         keywords = "无关键词"  # 如果没有关键词，就默认无关键词，用于生成文件夹名称
+#     if difficulty == "":
+#         difficult = "全部"  # 如果没有选择难度，就默认为返回全部，用于生成文件夹名称
+#     else:
+#         difficult = selected_difficulty.get()  # 如果有选择难度，就用选择的难度，用于生成文件夹名称
+#     # 构建文件名
+#     doc_parts = [difficult, keywords]
+#     doc_name = '-'.join(doc_parts)
+#     # 构建URL
+#     params = {"difficulty": difficulty, "type": type_value, "page": 1, "_contentOnly": 1}
+#     url = f"https://www.luogu.com.cn/problem/list?type={type_value}&difficulty={difficulty}&keyword={keyword}&page=1"
+#     return url, params, doc_name
+
 def main():
     url, params, doc_name = get_url()
     redirect_output()
-    print(doc_name)
     total, arr_pro = get_pid(url, params)
     get_problem(doc_name, total, arr_pro)
     
     
 # 创建一个按钮，当用户点击时调用get_numby_problems函数，使其与上面的难度选择器对齐并适当增加宽高
-search_button = tk.Button(root, text=" 搜索 ", command=main, font=font_style, width=8, height=1)
+search_button = tk.Button(root, text="   开爬！ ", command=main, font=font_style, width=8, height=1)
 search_button.grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
 # 运行tkinter应用程序
