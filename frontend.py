@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkfont
 from tkinter import scrolledtext # 导入 scrolledtext 模块
+from tkinter import messagebox
 import sys
 from getPid import get_pid
 from main import *
@@ -107,6 +108,10 @@ text_frame.grid(row=5, column=1, columnspan=26, padx=10, pady=10, sticky="ew")
 output_text = scrolledtext.ScrolledText(text_frame, font=font_style_output, width=80, height=20, bg="#E0F7FF", relief="solid", bd=2)
 output_text.pack()
 
+
+# 保存原始的stdout和stderr
+original_stdout = sys.stdout
+original_stderr = sys.stderr
 # 创建一个函数以将控制台输出重定向到Text小部件
 def redirect_output():
     # 定义一个自定义写函数，用于将消息写入Text小部件
@@ -118,6 +123,7 @@ def redirect_output():
     # 将stdout和stderr重定向到自定义写函数
     sys.stdout.write = custom_write
     sys.stderr.write = custom_write
+    
 
 
 # 创建一个函数来获取用户输入并构建URL
@@ -173,7 +179,17 @@ def main():
     total, arr_pro = get_pid(url, params)
     get_problem(doc_name, total, arr_pro)
     
-    
+# 当点击右上角退出时，执行的程序
+def on_closing():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        # 恢复原始的stdout和stderr
+        sys.stdout = original_stdout
+        sys.stderr = original_stderr
+        root.destroy()
+
+# WM_DELETE_WINDOW 不能改变，这是捕获命令
+root.protocol('WM_DELETE_WINDOW', on_closing)
+     
 # 创建一个按钮，当用户点击时调用get_numby_problems函数，使其与上面的难度选择器对齐并适当增加宽高
 search_button = tk.Button(root, text="   开爬！ ", command=main, font=font_style, width=8, height=1)
 search_button.grid(row=3, column=1, padx=10, pady=10, sticky="w")
